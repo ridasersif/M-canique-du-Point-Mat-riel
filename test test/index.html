@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mécanique du Point Matériel — Sersif Académie</title>
+  <meta name="description"
+    content="Résumé interactif du cours de Mécanique du point matériel avec graphiques 3D, coordonnées, cinématique et dynamique — par Sersif Académie.">
+  <meta name="author" content="Sersif Académie">
+  <meta property="og:title" content="Mécanique du Point Matériel — Sersif Académie">
+  <meta property="og:description"
+    content="Cours interactif de mécanique SMP·SMC S1-S3 avec visualisations 3D, formules et démonstrations.">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+
+  <!-- Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <!-- PDF Generation -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+
+<body>
+
+  <!-- Progress Bar -->
+  <div id="progress-bar"></div>
+
+  <!-- Mobile Menu Toggle -->
+  <button id="menu-toggle" aria-label="Menu"><i data-lucide="menu"></i></button>
+
+  <!-- Sidebar Overlay -->
+  <div id="sidebar-overlay"></div>
+
+  <!-- Floating Toolbar -->
+  <div class="floating-toolbar">
+    <button class="toolbar-btn" id="theme-toggle" aria-label="Changer le thème">
+      <span class="btn-icon" id="theme-icon"><i data-lucide="sun" class="icon-sun"></i><i data-lucide="moon"
+          class="icon-moon" style="display:none"></i></span>
+      <span class="btn-label" id="theme-label">Light</span>
+    </button>
+    <button class="toolbar-btn pdf-btn" id="pdf-download" aria-label="Télécharger en PDF">
+      <span class="btn-icon"><i data-lucide="download"></i></span>
+      <span class="btn-label">PDF A4</span>
+    </button>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+     SIDEBAR NAVIGATION
+     ═══════════════════════════════════════ -->
+  <nav id="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-logo-wrap">
+        <img src="image/logo-sersif.png" alt="Sersif Académie" class="sidebar-logo"
+          onerror="this.style.display='none'; document.getElementById('sidebar-logo-fallback').style.display='flex';">
+        <div class="sidebar-logo-svg" id="sidebar-logo-fallback" style="display:none;">
+          <div class="logo-circle">
+            <span class="logo-sa"><span class="logo-s">S</span><span class="logo-a">A</span></span>
+          </div>
+        </div>
+      </div>
+      <h1 class="brand-name">Sersif <span class="brand-accent">Académie</span></h1>
+      <div class="subtitle">Mécanique · SMP · SMC // S1 – S3</div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">Introduction</div>
+      <a href="#hero" class="nav-link active"><span class="nav-icon"><i data-lucide="home"></i></span> Accueil</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">Partie I — Coordonnées</div>
+      <a href="#sec-cartesian" class="nav-link"><span class="nav-icon"><i data-lucide="axis-3d"></i></span>
+        Cartésiennes</a>
+      <a href="#sec-cylindrical" class="nav-link"><span class="nav-icon"><i data-lucide="cylinder"></i></span>
+        Cylindriques</a>
+      <a href="#sec-spherical" class="nav-link"><span class="nav-icon"><i data-lucide="globe"></i></span> Sphériques</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">Partie II — Cinématique</div>
+      <a href="#sec-velocity" class="nav-link"><span class="nav-icon"><i data-lucide="gauge"></i></span> Vitesse &
+        Accélération</a>
+      <a href="#sec-frenet" class="nav-link"><span class="nav-icon"><i data-lucide="rotate-3d"></i></span> Trièdre de
+        Frenet</a>
+      <a href="#sec-repere" class="nav-link"><span class="nav-icon"><i data-lucide="git-compare"></i></span> Changement
+        de Repère</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">Partie III — Dynamique</div>
+      <a href="#sec-dynamics" class="nav-link"><span class="nav-icon"><i data-lucide="atom"></i></span> PFD & Dynamique</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">🎓 Formation</div>
+      <a href="#sec-offre" class="nav-link nav-link-offre"><span class="nav-icon">🔥</span> Offre Concours −50%</a>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════
+     MAIN CONTENT
+     ═══════════════════════════════════════ -->
+  <div id="main-content">
+
+    <!-- ─── HERO ─── -->
+    <section id="hero" class="hero">
+      <div class="hero-badge"><i data-lucide="book-open"></i> Résumé Interactif</div>
+      <h1 class="hero-title">
+        <span class="gradient-text">Mécanique</span><br>
+        du Point Matériel
+      </h1>
+      <p class="hero-subtitle">
+        Cours complet avec visualisations 3D interactives, formules et démonstrations.
+        SMP · SMC // Semestres S1 – S3
+      </p>
+      <div class="hero-meta">
+        <div class="hero-stat">
+          <div class="stat-value">7</div>
+          <div class="stat-label">Chapitres</div>
+        </div>
+        <div class="hero-stat">
+          <div class="stat-value">4</div>
+          <div class="stat-label">Scènes 3D</div>
+        </div>
+        <div class="hero-stat">
+          <div class="stat-value">50+</div>
+          <div class="stat-label">Formules</div>
+        </div>
+      </div>
+      <div class="hero-scroll-hint">
+        <span>Défiler</span>
+        <span class="arrow">↓</span>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════
+       SECTION 1 : COORDONNÉES CARTÉSIENNES
+       ═══════════════════════════════════════ -->
+    <section id="sec-cartesian" class="content-section">
+      <div class="section-header reveal">
+        <span class="section-number">01</span>
+        <h2>Coordonnées Cartésiennes</h2>
+        <span class="section-tag">Base</span>
+      </div>
+
+      <div class="glass-card reveal reveal-delay-1">
+        <h3><span class="icon"><i data-lucide="map-pin"></i></span> Point matériel dans l'espace</h3>
+        <p>Soit un point matériel quelconque dans l'espace et soit $(\vec{i}, \vec{j}, \vec{k})$ la base associée au
+          repère $R(O, x, y, z)$.</p>
+        <p>Le point $M$ est repéré dans la base $(\vec{i}, \vec{j}, \vec{k})$ par le <strong>vecteur position</strong> :
+        </p>
+
+        <div class="formula-block formula-result">
+          <div class="formula-label result-label">Vecteur position</div>
+          $$\vec{OM} = x\,\vec{i} + y\,\vec{j} + z\,\vec{k}$$
+        </div>
+
+        <h4>Décomposition par projection</h4>
+        <p>On note $M'$ la projection orthogonale de $M$ sur le plan $(Oxy)$ :</p>
+        <div class="formula-block">
+          $$\vec{OM} = \vec{OM'} + \vec{M'M}$$
+        </div>
+        <div class="derivation">
+          <div class="step">$\vec{OM'} = x\,\vec{i} + y\,\vec{j}$ <span class="step-note">— projection sur le plan
+              $(Oxy)$</span></div>
+          <div class="step">$\vec{M'M} = z\,\vec{k}$ <span class="step-note">— composante selon $Oz$</span></div>
+        </div>
+      </div>
+
+      <!-- 3D Scene: Cartesian -->
+      <div class="scene-wrapper reveal reveal-delay-2">
+        <div class="scene-container" id="scene-cartesian">
+          <div class="scene-title">Repère Cartésien 3D</div>
+          <div class="coord-display"></div>
+          <div class="scene-hint"><i data-lucide="mouse"></i> Rotation · Scroll pour zoom</div>
+        </div>
+        <div class="controls-panel">
+          <div class="control-group">
+            <label><span class="param-name">x</span> <span class="param-value" id="cart-x-value">1.50</span></label>
+            <input type="range" id="cart-x-slider" min="-2.5" max="2.5" step="0.05" value="1.5">
+          </div>
+          <div class="control-group">
+            <label><span class="param-name">y</span> <span class="param-value" id="cart-y-value">1.80</span></label>
+            <input type="range" id="cart-y-slider" min="-2.5" max="2.5" step="0.05" value="1.8">
+          </div>
+          <div class="control-group">
+            <label><span class="param-name">z</span> <span class="param-value" id="cart-z-value">1.20</span></label>
+            <input type="range" id="cart-z-slider" min="-2.5" max="2.5" step="0.05" value="1.2">
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════
+       SECTION 2 : COORDONNÉES CYLINDRIQUES
+       ═══════════════════════════════════════ -->
+    <section id="sec-cylindrical" class="content-section">
+      <div class="section-header reveal">
+        <span class="section-number">02</span>
+        <h2>Coordonnées Cylindriques</h2>
+        <span class="section-tag">ρ, φ, z</span>
+      </div>
+
+      <div class="glass-card reveal reveal-delay-1">
+        <h3><span class="icon"><i data-lucide="box"></i></span> Définition</h3>
+        <p>Soit $M$ un point quelconque de l'espace. On appelle <strong>plan polaire</strong> le plan perpendiculaire en
+          $O$ à l'axe $Oz$ (plan $Oxy$). Soit $m$ la projection orthogonale de $M$ sur le plan polaire.</p>
+        <p>Les coordonnées cylindriques $(\rho, \varphi, z)$ sont définies par :</p>
+        <ul>
+          <li>$\rho$ : distance de $m$ à l'axe $Oz$ — <em>$\rho \in [0, +\infty[$</em></li>
+          <li>$\varphi$ : angle polaire entre $(\vec{Ox}, \vec{Om})$ — <em>$\varphi \in [0, 2\pi[$</em></li>
+          <li>$z$ : cote sur $Oz$ — <em>$z \in \,]-\infty, +\infty[$</em></li>
+        </ul>
+      </div>
+
+      <div class="glass-card accent-emerald reveal reveal-delay-2">
+        <h3><span class="icon"><i data-lucide="compass"></i></span> Vecteurs unitaires</h3>
+        <p>Les vecteurs unitaires $\vec{e}_\rho$, $\vec{e}_\varphi$, $\vec{e}_3$ forment la <strong>base mobile</strong>
+          des coordonnées polaires :</p>
+        <ul>
+          <li>$\vec{e}_\rho$ : vecteur unitaire de l'axe $Om$ tel que $\vec{Om} = \rho\,\vec{e}_\rho$</li>
+          <li>$\vec{e}_\varphi$ : vecteur unitaire $\perp \vec{e}_\rho$ dans le plan polaire</li>
+          <li>$\vec{e}_3 = \vec{k}$</li>
+        </ul>
+        <div class="formula-block">
+          <div class="formula-label">Expressions dans la base cartésienne</div>
+          $$\vec{e}_\rho = \cos\varphi\,\vec{i} + \sin\varphi\,\vec{j}$$
+          $$\vec{e}_\varphi = -\sin\varphi\,\vec{i} + \cos\varphi\,\vec{j}$$
+          $$\vec{e}_3 = \vec{k}$$
+        </div>
+      </div>
+
+      <!-- 3D Scene: Cylindrical -->
+      <div class="scene-wrapper reveal reveal-delay-2">
+        <div class="scene-container" id="scene-cylindrical">
+          <div class="scene-title">Coordonnées Cylindriques</div>
+          <div class="coord-display"></div>
+          <div class="scene-hint"><i data-lucide="mouse"></i> Rotation · Scroll pour zoom</div>
+        </div>
+        <div class="controls-panel">
+          <div class="control-group">
+            <label><span class="param-name">ρ</span> <span class="param-value" id="cyl-rho-value">1.50</span></label>
+            <input type="range" id="cyl-rho-slider" min="0.1" max="2.5" step="0.05" value="1.5">
+          </div>
+          <div class="control-group">
+            <label><span class="param-name">φ</span> <span class="param-value" id="cyl-phi-value">45°</span></label>
+            <input type="range" id="cyl-phi-slider" min="0" max="6.283" step="0.05" value="0.785">
+          </div>
+          <div class="control-group">
+            <label><span class="param-name">z</span> <span class="param-value" id="cyl-z-value">1.20</span></label>
+            <input type="range" id="cyl-z-slider" min="0" max="3" step="0.05" value="1.2">
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card reveal">
+        <h3><span class="icon"><i data-lucide="link"></i></span> Relations cylindriques ↔ cartésiennes</h3>
+        <div class="two-col">
+          <div>
+            <h4>Cylindriques → Cartésiennes</h4>
+            <div class="formula-block formula-result">
+              $$x = \rho\cos\varphi$$
+              $$y = \rho\sin\varphi$$
+              $$z = z$$
+            </div>
+          </div>
+          <div>
+            <h4>Vecteur position</h4>
+            <div class="formula-block">
+              <div class="formula-label">Dans la base mobile</div>
+              $$\vec{OM} = \rho\,\vec{e}_\rho + z\,\vec{e}_3$$
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card reveal">
+        <h3><span class="icon"><i data-lucide="bar-chart-2"></i></span> Calcul de $d\vec{OM}$</h3>
+        <p>La différentielle du vecteur position s'écrit :</p>
+        <div class="formula-block">
+          $$d\vec{OM} = \frac{\partial\vec{OM}}{\partial\rho}\,d\rho +
+          \frac{\partial\vec{OM}}{\partial\varphi}\,d\varphi + \frac{\partial\vec{OM}}{\partial z}\,dz$$
+        </div>
+        <div class="derivation">
+          <div class="step">$\dfrac{\partial\vec{OM}}{\partial\rho} = \dfrac{\partial(\rho\vec{e}_\rho +
+            z\vec{e}_3)}{\partial\rho} = \vec{e}_\rho$</div>
+          <div class="step">$\dfrac{\partial\vec{OM}}{\partial\varphi} =
+            \rho\dfrac{\partial\vec{e}_\rho}{\partial\varphi} = \rho\,\vec{e}_\varphi$ <span class="step-note">car
+              $\vec{e}_\varphi$ est déjà connu</span></div>
+          <div class="step">$\dfrac{\partial\vec{OM}}{\partial z} = \vec{e}_3$</div>
+        </div>
+        <div class="formula-block formula-result">
+          <div class="formula-label result-label">Différentielle du vecteur position</div>
+          $$d\vec{OM} = d\rho\,\vec{e}_\rho + \rho\,d\varphi\,\vec{e}_\varphi + dz\,\vec{e}_3$$
+        </div>
+      </div>
+
+      <div class="glass-card accent-amber reveal">
+        <h3><span class="icon"><i data-lucide="ruler"></i></span> Surface et Volume du Cylindre</h3>
+
+        <h4>Surface latérale d'un cylindre d'axe $(Oz)$, de rayon $R$ et de hauteur $h$</h4>
+        <div class="formula-block">
+          $$dS = \rho\,d\varphi\,dz$$
+        </div>
+        <div class="derivation">
+          <div class="step">$S = \displaystyle\iint \rho\,d\rho\,dz$ avec $\varphi \in [0, 2\pi]$, $z \in [0, h]$ et
+            $\rho = R$</div>
+          <div class="step">$S = R \displaystyle\int_0^{2\pi} d\varphi \int_0^h dz = R \cdot 2\pi \cdot h$</div>
+        </div>
+        <div class="formula-block formula-result">
+          <div class="formula-label result-label">Surface latérale d'un cylindre</div>
+          $$\boxed{S = 2\pi R h}$$
+        </div>
+
+        <h4>Volume d'un cylindre d'axe $(Oz)$, de rayon $R$ et de hauteur $h$</h4>
+        <div class="formula-block">
+          $$dV = d\rho\cdot\rho\,d\varphi\cdot dz$$
+        </div>
+        <div class="derivation">
+          <div class="step">$V = \displaystyle\iiint d\rho\,\rho\,d\varphi\,dz = \int_0^R \rho\,d\rho \int_0^{2\pi}
+            d\varphi \int_0^h dz$</div>
+          <div class="step">$= \dfrac{1}{2}R^2 \cdot 2\pi \cdot h$</div>
+        </div>
+        <div class="formula-block formula-result">
+          <div class="formula-label result-label">Volume d'un cylindre</div>
+          $$\boxed{V = \pi R^2 h}$$
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════
+       SECTION 3 : COORDONNÉES SPHÉRIQUES
+       ═══════════════════════════════════════ -->
+    <section id="sec-spherical" class="content-section">
+      <div class="section-header reveal">
+        <span class="section-number">03</span>
+        <h2>Coordonnées Sphériques</h2>
+        <span class="section-tag">r, θ, φ</span>
+      </div>
+
+      <div class="glass-card reveal reveal-delay-1">
+        <h3><span class="icon"><i data-lucide="globe-2"></i></span> Définition</h3>
+        <p>Soit un point $M$ matériel repéré dans l'espace par les coordonnées sphériques $(r, \theta, \varphi)$ :</p>
+        <ul>
+          <li>$r$ : distance entre $O$ et $M$, $r = \|\vec{OM}\|$ — <em>$r \in [0, +\infty[$</em></li>
+          <li>$\theta$ : angle entre $(\vec{Oz}, \vec{OM})$ (colatitude) — <em>$\theta \in [0, \pi]$</em></li>
+          <li>$\varphi$ : azimut ou longitude, angle $(\vec{Ox}, \vec{e}_\rho)$ — <em>$\varphi \in [0, 2\pi]$</em></li>
+        </ul>
+      </div>
+
+      <div class="glass-card accent-emerald reveal reveal-delay-2">
+        <h3><span class="icon"><i data-lucide="compass"></i></span> Vecteurs unitaires</h3>
+        <p>Le vecteur unitaire radial :</p>
+        <div class="formula-block">
+          $$\vec{e}_r = \frac{\vec{OM}}{\|\vec{OM}\|}$$
+        </div>
+        <p>Les vecteurs $\vec{e}_r$, $\vec{e}_\theta$, $\vec{e}_\varphi$ sont définis par :</p>
+        <ul>
+          <li>$\vec{e}_r$ : vecteur unitaire de $\vec{OM}$</li>
+          <li>$\vec{e}_\theta$ : vecteur unitaire $\in$ au plan contenant $\vec{Oz}$ et $\vec{OM}$, $\perp \vec{e}_r$
+          </li>
+          <li>$\vec{e}_\varphi$ : vecteur unitaire $\in$ au plan $(Oxy)$, $\perp \vec{e}_\rho$</li>
+        </ul>
+        <div class="formula-block">
+          <div class="formula-label">Expressions dans la base intermédiaire</div>
+          $$\vec{e}_r = \sin\theta\,\vec{e}_\rho + \cos\theta\,\vec{k}$$
+          $$\vec{e}_\theta = \cos\theta\,\vec{e}_\rho - \sin\theta\,\vec{k}$$
+          $$\vec{e}_\varphi = -\sin\varphi\,\vec{i} + \cos\varphi\,\vec{j}$$
+        </div>
+      </div>
+
+      <!-- 3D Scene: Spherical -->
+      <div class="scene-wrapper reveal">
+        <div class="scene-container" id="scene-spherical">
+          <div class="scene-title">Coordonnées Sphériques</div>
+          <div class="coord-display"></div>
+          <div class="scene-hint"><i data-lucide="mouse"></i> Rotation · Scroll pour zoom</div>
+        </div>
+        <div class="controls-panel">
+          <div class="control-group">
+            <label><span class="param-name">r</span> <span class="param-value" id="sph-r-value">2.00</span></label>
+            <input type="range" id="sph-r-slider" min="0.2" max="3" step="0.05" value="2.0">
+          </div>
+          <div class="control-group">
+            <label><span class="param-name">θ</span> <span class="param-value" id="sph-theta-value">45°</span></label>
+            <input type="range" id="sph-theta-slider" min="0.05" max="3.1" step="0.05" value="0.785">
+          </div>
+          <div class="control-group">
+            <label><span class="param-name">φ</span> <span class="param-value" id="sph-phi-value">60°</span></label>
+            <input type="range" id="sph-phi-slider" min="0" max="6.283" step="0.05" value="1.047">
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card reveal">
+        <h3><span class="icon"><i data-lucide="link"></i></span> Relations sphériques ↔ cartésiennes</h3>
+        <div class="two-col">
+          <div>
+            <h4>Sphériques → Cartésiennes</h4>
+            <div class="formula-block formula-result">
+              $$x = r\sin\theta\cos\varphi$$
+              $$y = r\sin\theta\sin\varphi$$
+              $$z = r\cos\theta$$
+            </div>
+          </div>
+          <div>
+            <h4>Avec la relation intermédiaire</h4>
+            <div class="formula-block">
+              $$\rho = r\sin\theta$$
+              $$z = r\cos\theta$$
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card reveal">
+        <h3><span class="icon"><i data-lucide="bar-chart-2"></i></span> Éléments différentiels</h3>
+
+        <h4>Déplacement élémentaire</h4>
+        <div class="formula-block formula-result">
+          $$d\vec{l} = dr\,\vec{e}_r + r\,d\theta\,\vec{e}_\theta + r\sin\theta\,d\varphi\,\vec{e}_\varphi$$
+        </div>
+        <div class="formula-block">
+          $$(dl)^2 = dr^2 + (r\,d\theta)^2 + (r\sin\theta\,d\varphi)^2$$
+        </div>
+
+        <h4>Élément de volume</h4>
+        <div class="formula-block formula-result">
+          $$dV = r^2 \sin\theta\,dr\,d\theta\,d\varphi$$
+        </div>
+
+        <h4>Élément de surface</h4>
+        <div class="formula-block formula-result">
+          $$dS = r^2 \sin\theta\,d\theta\,d\varphi$$
+        </div>
+      </div>
+
+      <div class="glass-card accent-amber reveal">
+        <h3><span class="icon"><i data-lucide="ruler"></i></span> Surface et Volume de la Sphère</h3>
+
+        <h4>Surface d'une sphère de rayon $R$</h4>
+        <div class="derivation">
+          <div class="step">$dS = R^2 \sin\theta\,d\theta\,d\varphi$</div>
+          <div class="step">$S = \displaystyle\iint R^2 \sin\theta\,d\theta\,d\varphi = R^2 \int_0^{2\pi} d\varphi
+            \int_0^{\pi} \sin\theta\,d\theta$</div>
+          <div class="step">$= R^2 \cdot 2\pi \cdot [-\cos\theta]_0^{\pi} = R^2 \cdot 2\pi \cdot 2$</div>
+        </div>
+        <div class="formula-block formula-result">
+          <div class="formula-label result-label">Surface d'une sphère</div>
+          $$\boxed{S = 4\pi R^2}$$
+        </div>
+
+        <h4>Volume d'une sphère de rayon $R$</h4>
+        <div class="derivation">
+          <div class="step">$dV = r^2 \sin\theta\,dr\,d\theta\,d\varphi$</div>
+          <div class="step">$V = \displaystyle\int_0^R r^2\,dr \int_0^{2\pi} d\varphi \int_0^{\pi} \sin\theta\,d\theta$
+          </div>
+          <div class="step">$= \dfrac{1}{3}R^3 \cdot 2\pi \cdot 2 = \dfrac{4}{3}\pi R^3$</div>
+        </div>
+        <div class="formula-block formula-result">
+          <div class="formula-label result-label">Volume d'une sphère</div>
+          $$\boxed{V = \frac{4}{3}\pi R^3}$$
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════
+       SECTION 4 : VITESSE ET ACCÉLÉRATION
+       ═══════════════════════════════════════ -->
+    <section id="sec-velocity" class="content-section">
+      <div class="section-header reveal">
+        <span class="section-number">04</span>
+        <h2>Calcul des Vitesses et de l'Accélération</h2>
+        <span class="section-tag">Cinématique</span>
+      </div>
+
+      <!-- En coordonnées cylindriques -->
+      <div class="glass-card reveal reveal-delay-1">
+        <h3><span class="icon"><i data-lucide="zap"></i></span> En Coordonnées Cylindriques</h3>
+        <p>On a $\vec{OM} = \rho\,\vec{e}_\rho + z\,\vec{k}$</p>
+
+        <h4>Vitesse $\vec{V}(M/R)$</h4>
+        <div class="formula-block">
+          $$\vec{V}(M/R) = \frac{d\vec{OM}}{dt}\bigg|_R = \frac{d}{dt}\left(\rho\,\vec{e}_\rho +
+          z\,\vec{k}\right)\bigg|_R$$
+        </div>
+        <div class="derivation">
+          <div class="step">$= \dfrac{d\rho}{dt}\,\vec{e}_\rho + \rho\dfrac{d\vec{e}_\rho}{dt}\bigg|_R +
+            \dfrac{dz}{dt}\,\vec{k}$</div>
+          <div class="step">Et $z\dfrac{d\vec{k}}{dt} = 0$ car $\vec{k}$ est fixe dans $R$</div>
+          <div class="step">$\dfrac{d\vec{e}_\rho}{dt} = \dot{\varphi}\,\vec{e}_\varphi$</div>
+        </div>
+        <div class="formula-block formula-result">
+          <div class="formula-label result-label">Vitesse en cylindriques</div>
+          $$\boxed{\vec{V}(M/R) = \dot{\rho}\,\vec{e}_\rho + \rho\dot{\varphi}\,\vec{e}_\varphi + \dot{z}\,\vec{k}}$$
+        </div>
+
+        <h4>Accélération $\vec{\gamma}(M/R)$</h4>
+        <div class="formula-block">
+          $$\vec{\gamma}(M/R) = \frac{d^2\vec{OM}}{dt^2}\bigg|_R = \frac{d\vec{V}(M/R)}{dt}\bigg|_R$$
+        </div>
+        <div class="formula-block formula-result">
+          <div class="formula-label result-label">Accélération en cylindriques</div>
+          $$\boxed{\vec{\gamma}(M/R) = \left(\ddot{\rho} - \rho\dot{\varphi}^2\right)\vec{e}_\rho +
+          \left(2\dot{\rho}\dot{\varphi} + \rho\ddot{\varphi}\right)\vec{e}_\varphi + \ddot{z}\,\vec{k}}$$
+        </div>
+      </div>
+
+      <!-- En coordonnées sphériques -->
+      <div class="glass-card accent-emerald reveal">
+        <h3><span class="icon"><i data-lucide="zap"></i></span> En Coordonnées Sphériques</h3>
+        <p>On a $\vec{OM} = r\,\vec{e}_r$</p>
+
+        <h4>Vitesse $\vec{V}(M/R)$</h4>
+        <div class="formula-block">
+          $$\vec{V}(M/R) = \frac{d\vec{OM}}{dt}\bigg|_R = \frac{d}{dt}\left(r\,\vec{e}_r\right)\bigg|_R =
+          \dot{r}\,\vec{e}_r + r\frac{d\vec{e}_r}{dt}\bigg|_R$$
+        </div>
+        <div class="derivation">
+          <div class="step">$\dfrac{d\vec{e}_r}{dt} = \dot{\varphi}\sin\theta\,\vec{e}_\varphi +
+            \dot{\theta}\,\vec{e}_\theta$</div>
+        </div>
+        <div class="formula-block formula-result">
+          <div class="formula-label result-label">Vitesse en sphériques</div>
+          $$\boxed{\vec{V}(M/R) = \dot{r}\,\vec{e}_r + r\dot{\theta}\,\vec{e}_\theta +
+          r\dot{\varphi}\sin\theta\,\vec{e}_\varphi}$$
+        </div>
+
+        <h4>Accélération $\vec{\gamma}(M/R)$</h4>
+        <div class="formula-block">
+          $$\vec{\gamma}(M/R) = \frac{d\vec{V}(M/R)}{dt}\bigg|_R$$
+        </div>
+        <div class="formula-block formula-result">
+          <div class="formula-label result-label">Accélération en sphériques</div>
+          $$\vec{\gamma}(M/R) = \left(\ddot{r} - r\dot{\theta}^2 - r\dot{\varphi}^2\sin^2\theta\right)\vec{e}_r$$
+          $$+ \left(r\ddot{\theta} + 2\dot{r}\dot{\theta} - r\dot{\varphi}^2\sin\theta\cos\theta\right)\vec{e}_\theta$$
+          $$+ \left(r\ddot{\varphi}\sin\theta + 2\dot{r}\dot{\varphi}\sin\theta +
+          2r\dot{\theta}\dot{\varphi}\cos\theta\right)\vec{e}_\varphi$$
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════
+       SECTION 5 : TRIÈDRE DE FRENET
+       ═══════════════════════════════════════ -->
+    <section id="sec-frenet" class="content-section">
+      <div class="section-header reveal">
+        <span class="section-number">05</span>
+        <h2>Trièdre de Frenet</h2>
+        <span class="section-tag">τ, n, b</span>
+      </div>
+
+      <div class="glass-card reveal reveal-delay-1">
+        <h3><span class="icon"><i data-lucide="rotate-3d"></i></span> Définitions</h3>
+        <p>Le trièdre de Frenet $(\vec{\tau}, \vec{n}, \vec{b})$ est une base mobile liée à la trajectoire :</p>
+
+        <h4>Module de la vitesse</h4>
+        <div class="formula-block">
+          $$|\vec{V}| = \frac{ds}{dt}$$
+        </div>
+
+        <h4>Vecteur tangent $\vec{\tau}$</h4>
+        <div class="formula-block">
+          $$\vec{V} = \frac{ds}{dt}\,\vec{\tau} = \|\vec{V}\|\,\vec{\tau} \qquad \Rightarrow \qquad \vec{\tau} =
+          \frac{\vec{V}}{\|\vec{V}\|}, \quad \|\vec{\tau}\| = 1$$
+        </div>
+        <div class="formula-block formula-result">
+          $$\vec{\tau} = \frac{d\vec{OM}}{ds}$$
+        </div>
+
+        <h4>Vecteur normal $\vec{n}$ et binormal $\vec{b}$</h4>
+        <div class="formula-block">
+          $$\vec{n} = \frac{d\vec{\tau}/dt}{\|d\vec{\tau}/dt\|} \qquad\qquad \vec{b} = \vec{\tau} \wedge \vec{n}$$
+        </div>
+      </div>
+
+      <div class="glass-card accent-rose reveal">
+        <h3><span class="icon"><i data-lucide="triangle"></i></span> Rayon de courbure et accélération</h3>
+        <p>$\dfrac{1}{R_c}$ : la courbure de la trajectoire au point $M$.</p>
+
+        <h4>Décomposition de l'accélération (Frenet)</h4>
+        <div class="formula-block formula-result">
+          <div class="formula-label result-label">Composantes tangentielle et normale</div>
+          $$\boxed{\vec{\gamma}(M/R) = \vec{\gamma}_t + \vec{\gamma}_n = \frac{d\|\vec{V}\|}{dt}\,\vec{\tau} +
+          \frac{\|\vec{V}\|^2}{R_c}\,\vec{n}}$$
+        </div>
+        <div class="derivation">
+          <div class="step">$\vec{\gamma}_t = \dfrac{d\|\vec{V}\|}{dt}\,\vec{\tau}$ <span class="step-note">—
+              accélération tangentielle</span></div>
+          <div class="step">$\vec{\gamma}_n = \dfrac{\|\vec{V}\|^2}{R_c}\,\vec{n}$ <span class="step-note">—
+              accélération normale (centripète)</span></div>
+        </div>
+      </div>
+
+      <!-- 3D Scene: Frenet -->
+      <div class="scene-wrapper reveal">
+        <div class="scene-container" id="scene-frenet">
+          <div class="scene-title">Trièdre de Frenet — Hélice 3D</div>
+          <div class="coord-display"></div>
+          <div class="scene-hint"><i data-lucide="mouse"></i> Rotation · Scroll pour zoom</div>
+        </div>
+        <div class="controls-panel">
+          <div class="control-group">
+            <label><span class="param-name">Position s/L</span> <span class="param-value"
+                id="frenet-t-value">30%</span></label>
+            <input type="range" id="frenet-t-slider" min="0" max="18.85" step="0.05" value="5.65">
+          </div>
+          <div class="control-group" style="display:flex;align-items:flex-end;">
+            <button class="play-btn" id="frenet-play-btn"><i data-lucide="play"></i> Animer</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout info reveal">
+        <span class="callout-icon"><i data-lucide="lightbulb"></i></span>
+        <div>Le trièdre de Frenet se déplace le long de la trajectoire. Le vecteur <strong>$\vec{\tau}$</strong> (jaune)
+          est tangent, <strong>$\vec{n}$</strong> (rose) pointe vers le centre de courbure, et
+          <strong>$\vec{b}$</strong> (vert) complète le trièdre direct.</div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════
+       SECTION 6 : CHANGEMENT DE REPÈRE
+       ═══════════════════════════════════════ -->
+    <section id="sec-repere" class="content-section">
+      <div class="section-header reveal">
+        <span class="section-number">06</span>
+        <h2>Changement de Repère</h2>
+        <span class="section-tag">Composition</span>
+      </div>
+
+      <div class="glass-card reveal reveal-delay-1">
+        <h3><span class="icon"><i data-lucide="git-compare"></i></span> Composition des vitesses</h3>
+        <p>Soient deux repères :</p>
+        <ul>
+          <li>$R(O, \vec{i}, \vec{j}, \vec{k})$ — <strong>repère absolu</strong></li>
+          <li>$R_1(O_1, \vec{i}_1, \vec{j}_1, \vec{k}_1)$ — <strong>repère relatif</strong></li>
+        </ul>
+        <div class="formula-block formula-result">
+          <div class="formula-label result-label">Composition des vitesses</div>
+          $$\boxed{\vec{V}_a = \vec{V}_e + \vec{V}_r}$$
+        </div>
+        <p>Avec :</p>
+        <ul>
+          <li>$\vec{V}_a$ : vitesse <strong>absolue</strong> — $\vec{V}_a = \dfrac{d\vec{OM}}{dt}\bigg|_R$</li>
+          <li>$\vec{V}_r$ : vitesse <strong>relative</strong> — $\vec{V}_r = \dfrac{d\vec{O_1M}}{dt}\bigg|_{R_1}$</li>
+          <li>$\vec{V}_e$ : vitesse <strong>d'entraînement</strong></li>
+        </ul>
+        <div class="formula-block">
+          <div class="formula-label">Vitesse d'entraînement</div>
+          $$\vec{V}_e = \frac{d\vec{OO_1}}{dt}\bigg|_R + \vec{\omega}(R_1/R) \wedge \vec{O_1M}$$
+        </div>
+      </div>
+
+      <div class="glass-card accent-rose reveal">
+        <h3><span class="icon"><i data-lucide="zap"></i></span> Transformation de l'accélération</h3>
+        <div class="formula-block formula-result">
+          <div class="formula-label result-label">Composition des accélérations</div>
+          $$\boxed{\vec{\gamma}_a = \vec{\gamma}_r + \vec{\gamma}_e + \vec{\gamma}_c}$$
+        </div>
+        <p>Avec :</p>
+        <ul>
+          <li>$\vec{\gamma}_a$ : accélération <strong>absolue</strong></li>
+          <li>$\vec{\gamma}_r$ : accélération <strong>relative</strong></li>
+          <li>$\vec{\gamma}_e$ : accélération <strong>d'entraînement</strong></li>
+          <li>$\vec{\gamma}_c$ : accélération <strong>de Coriolis</strong></li>
+        </ul>
+
+        <h4>Accélération relative</h4>
+        <div class="formula-block">
+          $$\vec{\gamma}_r = \frac{d\vec{O_1M}}{dt^2}\bigg|_{R_1}$$
+        </div>
+
+        <h4>Accélération d'entraînement</h4>
+        <div class="formula-block">
+          $$\vec{\gamma}_e = \frac{d^2\vec{OO_1}}{dt^2}\bigg|_R + \frac{d\vec{\omega}(R_1/R)}{dt}\bigg|_R \wedge
+          \vec{O_1M} + \vec{\omega} \wedge \left(\vec{\omega} \wedge \vec{O_1M}\right)$$
+        </div>
+
+        <h4>Accélération de Coriolis</h4>
+        <div class="formula-block formula-result">
+          <div class="formula-label result-label">Formule de Coriolis</div>
+          $$\boxed{\vec{\gamma}_c = 2\,\vec{\omega}(R_1/R) \wedge \vec{V}_r}$$
+        </div>
+
+        <div class="callout warning reveal">
+          <span class="callout-icon"><i data-lucide="alert-triangle"></i></span>
+          <div><strong>Partie très importante !</strong> La composition des vitesses et accélérations est fondamentale
+            pour le passage entre repères.</div>
+        </div>
+      </div>
+
+      <div class="glass-card reveal">
+        <h3><span class="icon"><i data-lucide="file-text"></i></span> Formule pratique de $\vec{V}_e$</h3>
+        <div class="formula-block">
+          $$\vec{V}_e = \frac{d\vec{O_1M}}{dt}\bigg|_R - \frac{1}{2}\vec{\gamma}_c$$
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════
+       SECTION 7 : DYNAMIQUE DU POINT MATÉRIEL
+       ═══════════════════════════════════════ -->
+    <section id="sec-dynamics" class="content-section">
+      <div class="section-header reveal">
+        <span class="section-number">07</span>
+        <h2>Principe Fondamental de la Dynamique</h2>
+        <span class="section-tag">PFD</span>
+      </div>
+
+      <div class="glass-card reveal reveal-delay-1">
+        <h3><span class="icon"><i data-lucide="atom"></i></span> Quantité de mouvement</h3>
+        <p>Soit un point matériel $M$ de masse $m$ en mouvement de vitesse $\vec{V}(M/R)$ dans un référentiel $R(O,
+          \vec{i}, \vec{j}, \vec{k})$ :</p>
+        <div class="formula-block formula-result">
+          <div class="formula-label result-label">Quantité de mouvement</div>
+          $$\boxed{\vec{p} = m\,\vec{V}(M/R)}$$
+        </div>
+      </div>
+
+      <div class="glass-card accent-emerald reveal">
+        <h3><span class="icon"><i data-lucide="rotate-cw"></i></span> Moment cinétique</h3>
+        <p>Le moment cinétique en un point $A$ du point matériel $M$ dans son mouvement par rapport à $R$ :</p>
+        <div class="formula-block formula-result">
+          <div class="formula-label result-label">Moment cinétique</div>
+          $$\boxed{\vec{\sigma}_A(M/R) = \vec{AM} \wedge m\,\vec{V}(M/R)}$$
+        </div>
+        <p>En particulier, par rapport à l'origine :</p>
+        <div class="formula-block">
+          $$\vec{\sigma}_O(M/R) = \vec{OM} \wedge m\,\vec{V}(M/R)$$
+        </div>
+      </div>
+
+      <div class="glass-card accent-rose reveal">
+        <h3><span class="icon"><i data-lucide="scale"></i></span> Relation Fondamentale de la Dynamique (PFD)</h3>
+        <p>Le moment dynamique des forces extérieures appliqué au point $M$ égale la dérivée par rapport au temps de la
+          quantité de mouvement :</p>
+        <div class="formula-block formula-result">
+          <div class="formula-label result-label">PFD — 2ème Principe de Newton</div>
+          $$\boxed{\sum \vec{F}_{ext} = \frac{d\vec{p}}{dt}\bigg|_R = m\,\vec{\gamma}}$$
+        </div>
+        <p>Où $\sum \vec{F}_{ext}$ désigne la somme des forces extérieures (forces réelles) appliquées au point matériel
+          $M$.</p>
+      </div>
+
+      <div class="glass-card reveal">
+        <h3><span class="icon"><i data-lucide="square-function"></i></span> Théorème du Moment Cinétique</h3>
+        <p>Le moment dynamique des forces extérieures appliqué au point $M$ par rapport au point $A$ :</p>
+        <div class="formula-block">
+          $$\frac{d\vec{\sigma}_A}{dt}\bigg|_R = m\left[\vec{V}(M/R) - \vec{V}(A/R) \wedge \vec{V}(M/R)\right] +
+          \vec{AM} \wedge m\vec{\gamma}$$
+        </div>
+        <div class="formula-block formula-result">
+          <div class="formula-label result-label">Théorème du moment cinétique</div>
+          $$\frac{d\vec{\sigma}_A}{dt}\bigg|_R = \mathcal{M}_A\left(\sum\vec{F}_{ext}\right) - m\,\vec{V}(A/R) \wedge
+          \vec{V}(M/R)$$
+        </div>
+
+        <div class="callout success reveal">
+          <span class="callout-icon"><i data-lucide="check-circle-2"></i></span>
+          <div><strong>Cas particulier :</strong> Si $A$ est fixe dans $R$, alors $\vec{V}(A/R) = \vec{0}$ et on obtient
+            :
+            $$\mathcal{M}_A\left(\sum\vec{F}_{ext}\right) = \frac{d\vec{\sigma}_A(M/R)}{dt}\bigg|_R$$</div>
+        </div>
+      </div>
+
+      <div class="glass-card accent-amber reveal">
+        <h3><span class="icon"><i data-lucide="git-compare"></i></span> PFD et Changement de Repère</h3>
+        <p>Dans un repère galiléen $R$ :</p>
+        <div class="formula-block">
+          $$m\,\vec{\gamma}(M/R) = \sum \vec{F}_{ext}$$
+        </div>
+        <p>Or, on a $\vec{\gamma}(M/R) = \vec{\gamma}_r + \vec{\gamma}_e + \vec{\gamma}_c$, donc :</p>
+        <div class="formula-block formula-result">
+          <div class="formula-label result-label">PFD dans un repère non galiléen</div>
+          $$\boxed{m\,\vec{\gamma}(M/R_1) = \sum \vec{F}_{ext} - m\vec{\gamma}_e - m\vec{\gamma}_c}$$
+        </div>
+        <div class="formula-block">
+          $$= \sum \vec{F}_{ext} + \vec{f}_{ie} + \vec{f}_{ic}$$
+        </div>
+        <p>Où $\vec{f}_{ie} = -m\vec{\gamma}_e$ est la <strong>force d'inertie d'entraînement</strong> et $\vec{f}_{ic}
+          = -m\vec{\gamma}_c$ est la <strong>force d'inertie de Coriolis</strong>.</p>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════
+       SECTION OFFRE SPÉCIALE — CONCOURS ENSEIGNEMENT
+       ═══════════════════════════════════════ -->
+  <section id="sec-offre" class="offre-section">
+
+    <!-- Badge annonce -->
+    <div class="offre-badge-row reveal">
+      <span class="offre-badge-pill">
+        <span class="offre-badge-dot"></span>
+        📢 Annonce Exclusive — Offre Limitée
+      </span>
+    </div>
+
+    <!-- Titre principal -->
+    <div class="offre-header reveal reveal-delay-1">
+      <h2 class="offre-title">
+        <span class="offre-title-grad">Formation Spécialisée</span><br>
+        Concours de l'Enseignement
+      </h2>
+      <p class="offre-subtitle">
+        Spécialité <strong>Physique &amp; Chimie</strong> — Préparation complète et intensive
+      </p>
+    </div>
+
+    <!-- Card centrale -->
+    <div class="offre-main-grid reveal reveal-delay-2">
+
+      <!-- Colonne gauche : image affiche -->
+      <div class="offre-img-col">
+        <div class="offre-img-wrapper">
+          <img src="image/promo-concours.jpg" alt="Formation Physique Chimie — Concours Enseignement" class="offre-img">
+          <div class="offre-img-badge">
+            <span class="offre-discount">-50%</span>
+            <span class="offre-badge-label">Offre spéciale</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Colonne droite : détails -->
+      <div class="offre-details-col">
+
+        <!-- Prix -->
+        <div class="offre-price-block">
+          <div class="offre-price-old">
+            <span class="price-label">Prix normal</span>
+            <span class="price-crossed">500 DH</span>
+          </div>
+          <div class="offre-price-new">
+            <span class="price-now">250 DH</span>
+            <span class="price-only">seulement !</span>
+          </div>
+        </div>
+
+        <!-- Ce que comprend la formation -->
+        <h3 class="offre-section-title">📌 Ce que comprend la formation</h3>
+        <ul class="offre-features">
+          <li>
+            <span class="feat-icon">💻</span>
+            <div>
+              <strong>2 séances par semaine en direct</strong> via Google Meet — explication détaillée de tous les modules, avec possibilité d'interaction et de questions en temps réel.
+            </div>
+          </li>
+          <li>
+            <span class="feat-icon">📝</span>
+            <div>
+              <strong>Groupe Facebook privé</strong> — enregistrements de toutes les séances en haute qualité + vidéos de révisions concentrées accessibles à tout moment.
+            </div>
+          </li>
+          <li>
+            <span class="feat-icon">💬</span>
+            <div>
+              <strong>Groupe WhatsApp de suivi quotidien</strong> — plan de travail hebdomadaire, exercices pratiques, séries et méthodologie d'examen.
+            </div>
+          </li>
+        </ul>
+
+        <!-- Urgence -->
+        <div class="offre-urgence">
+          <span class="urgence-icon">⏳</span>
+          <span>Cette offre est disponible pour une <strong>durée très limitée</strong> — Ne ratez pas cette opportunité exceptionnelle !</span>
+        </div>
+
+        <!-- CTA Button -->
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfj8CkQ8XSaHYA_KfcAuWcBnGdpARxbnUIbbE-c3r3KEFiE6w/viewform?usp=header"
+           target="_blank" rel="noopener noreferrer"
+           class="offre-cta-btn" id="btn-inscription">
+          <span class="cta-icon">📥</span>
+          <span class="cta-text">Je m'inscris maintenant</span>
+          <span class="cta-arrow">→</span>
+        </a>
+        <p class="offre-cta-note">Remplissez le formulaire — notre équipe vous contactera immédiatement.</p>
+
+      </div>
+    </div>
+
+    <!-- Bannière footer de section -->
+    <div class="offre-footer-strip reveal">
+      <div class="strip-brand">
+        <img src="image/logo-sersif.png" alt="Sersif Académie" class="strip-logo">
+        <span>Sersif <em>Académie</em></span>
+      </div>
+      <div class="strip-tagline">Révision · Accompagnement · Réussite</div>
+    </div>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════ -->
+    <footer class="footer">
+      <div class="footer-logo-row">
+        <img src="image/logo-sersif.png" alt="Sersif Académie" class="footer-logo" onerror="this.style.display='none';">
+        <div class="footer-brand-text">
+          <span class="footer-brand-name">Sersif Académie</span>
+          <span class="footer-brand-tagline">Révision · Accompagnement · Réussite</span>
+        </div>
+      </div>
+      <div class="footer-divider"></div>
+      <p class="footer-course">Résumé de Mécanique du Point Matériel — SMP · SMC // S1 – S3</p>
+      <p class="credits">
+        <span class="footer-created">Created by</span>
+        <span class="footer-academy">Sersif Académie</span>
+      </p>
+    </footer>
+
+  </div><!-- /main-content -->
+
+  <!-- Scene Scripts -->
+  <script src="js/scenes/cartesian.js"></script>
+  <script src="js/scenes/cylindrical.js"></script>
+  <script src="js/scenes/spherical.js"></script>
+  <script src="js/scenes/frenet.js"></script>
+
+  <!-- PDF Generator -->
+  <script src="js/pdf-generator.js"></script>
+
+  <!-- App Script -->
+  <script src="js/app.js"></script>
+
+</body>
+
+</html>
