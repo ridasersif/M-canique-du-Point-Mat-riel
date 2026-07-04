@@ -1776,23 +1776,62 @@ input[type="range"]::-moz-range-thumb {
   }
 }
 
+
 @media (max-width: 640px) {
   .offre-section {
     padding: var(--sp-2xl) var(--sp-md);
   }
   .offre-price-block {
     flex-direction: column;
-    align-items: flex-start;
-    gap: var(--sp-md);
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: var(--sp-sm);
+    padding: var(--sp-md);
+  }
+  .price-crossed {
+    font-size: 1.1rem;
   }
   .price-now {
-    font-size: 2rem;
+    font-size: 2.2rem;
   }
-  .offre-cta-btn {
+  .offre-cta-btn,
+  .offre-whatsapp-btn,
+  .offre-group-btn {
+    width: 100%;
     padding: var(--sp-md) var(--sp-lg);
     font-size: 0.95rem;
+    justify-content: center;
+    text-align: center;
+  }
+  .offre-whatsapp-btn {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--sp-xs);
+  }
+  .wa-number {
+    font-size: 0.75rem;
+    padding: 1px 6px;
+  }
+  .offre-group-btn {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--sp-sm);
+    justify-content: center;
+  }
+  .group-btn-content {
+    align-items: center;
+    text-align: center;
+  }
+  .group-btn-arrow {
+    display: none; /* Hide arrow on mobile to save space */
+  }
+  .offre-features li {
+    padding: var(--sp-md);
+    gap: var(--sp-sm);
   }
 }
+
 
 /* ── Responsive ── */
 @media (max-width: 1024px) {
