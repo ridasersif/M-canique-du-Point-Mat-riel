@@ -1490,7 +1490,232 @@ input[type="range"]::-moz-range-thumb {
   font-style: italic;
 }
 
-/* Footer strip de section */
+/* ── WhatsApp Button ── */
+.offre-whatsapp-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-md);
+  padding: var(--sp-lg) var(--sp-2xl);
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+  border-radius: var(--r-full);
+  text-decoration: none;
+  color: #fff;
+  font-weight: 800;
+  font-size: 1rem;
+  box-shadow: 0 8px 30px rgba(37, 211, 102, 0.35);
+  transition: all var(--t-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.offre-whatsapp-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 50%);
+  border-radius: inherit;
+}
+
+.offre-whatsapp-btn::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.offre-whatsapp-btn:hover::after {
+  transform: translateX(100%);
+}
+
+.offre-whatsapp-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 45px rgba(37, 211, 102, 0.5);
+}
+
+.offre-whatsapp-btn:active {
+  transform: translateY(-1px);
+}
+
+.wa-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.wa-svg {
+  width: 22px;
+  height: 22px;
+  fill: #fff;
+}
+
+.wa-text {
+  font-size: 1rem;
+  font-weight: 800;
+  position: relative;
+  z-index: 1;
+}
+
+.wa-number {
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.2);
+  padding: 2px 10px;
+  border-radius: var(--r-full);
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-mono);
+  letter-spacing: 0.03em;
+}
+
+/* ── Floating WhatsApp bubble (coin bas-droit) ── */
+.wa-float-bubble {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  background: linear-gradient(135deg, #25d366, #128c7e);
+  color: #fff;
+  text-decoration: none;
+  border-radius: var(--r-full);
+  padding: 14px 20px 14px 16px;
+  box-shadow: 0 8px 30px rgba(37, 211, 102, 0.45);
+  font-weight: 700;
+  font-size: 0.88rem;
+  transition: all var(--t-normal);
+  animation: waBubbleIn 0.6s var(--ease-out) 1s both;
+}
+
+@keyframes waBubbleIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.8); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.wa-float-bubble:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 15px 40px rgba(37, 211, 102, 0.55);
+}
+
+.wa-float-bubble .wa-svg {
+  width: 24px;
+  height: 24px;
+}
+
+.wa-float-label {
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .wa-float-bubble .wa-float-label {
+    display: none;
+  }
+  .wa-float-bubble {
+    padding: 14px;
+    border-radius: 50%;
+  }
+  .offre-whatsapp-btn {
+    flex-direction: column;
+    gap: var(--sp-sm);
+    padding: var(--sp-md) var(--sp-lg);
+  }
+}
+
+/* ── WhatsApp Group Button ── */
+.offre-group-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-md);
+  padding: var(--sp-md) var(--sp-xl);
+  background: rgba(37, 211, 102, 0.08);
+  border: 2px solid rgba(37, 211, 102, 0.35);
+  border-radius: var(--r-lg);
+  text-decoration: none;
+  color: #25d366;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: all var(--t-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.offre-group-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(37, 211, 102, 0.08) 0%, transparent 60%);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity var(--t-normal);
+}
+
+.offre-group-btn:hover {
+  background: linear-gradient(135deg, #25d366, #128c7e);
+  border-color: transparent;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 35px rgba(37, 211, 102, 0.4);
+}
+
+.offre-group-btn:hover::before {
+  opacity: 1;
+}
+
+.offre-group-btn:hover .wa-svg {
+  fill: #fff;
+}
+
+.offre-group-btn:active {
+  transform: translateY(0);
+}
+
+.group-btn-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.group-btn-label {
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.group-btn-sub {
+  font-size: 0.72rem;
+  opacity: 0.75;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.group-btn-arrow {
+  font-size: 1.2rem;
+  transition: transform var(--t-fast);
+}
+
+.offre-group-btn:hover .group-btn-arrow {
+  transform: translateX(5px);
+}
+
+@media (max-width: 640px) {
+  .offre-group-btn {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--sp-sm);
+  }
+}
+
 .offre-footer-strip {
   display: flex;
   align-items: center;
@@ -1501,6 +1726,7 @@ input[type="range"]::-moz-range-thumb {
   border: 1px solid rgba(184, 152, 63, 0.15);
   border-radius: var(--r-lg);
 }
+
 
 .strip-brand {
   display: flex;
